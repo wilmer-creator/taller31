@@ -74,7 +74,7 @@ let ymax = 300;
 
 
 // =========================================
-// DIBUJAR VENTANA
+// FUNCION PARA DIBUJAR VENTANA
 // =========================================
 
 function drawWindow() {
@@ -94,7 +94,7 @@ function drawWindow() {
 
 
 // =========================================
-// CALCULAR CODIGO DE REGION
+// FUNCION PARA CALCULAR CODIGO
 // =========================================
 
 function computeCode(x, y) {
@@ -143,7 +143,7 @@ function cohenSutherland(x1, y1, x2, y2) {
 
     while (true) {
 
-        // ACEPTACION TRIVIAL
+        // ACEPTACION
         if ((code1 | code2) === 0) {
 
             accept = true;
@@ -151,22 +151,21 @@ function cohenSutherland(x1, y1, x2, y2) {
             break;
         }
 
-        // RECHAZO TRIVIAL
+        // RECHAZO
         else if ((code1 & code2) !== 0) {
 
             break;
         }
 
-        // CALCULAR INTERSECCIONES
+        // RECORTE
         else {
 
             let x;
             let y;
 
-            // Punto que esta fuera
             let codeOut = code1 !== 0 ? code1 : code2;
 
-            // ARRIBA
+            // Arriba
             if (codeOut & TOP) {
 
                 x = x1 + (x2 - x1) *
@@ -176,7 +175,7 @@ function cohenSutherland(x1, y1, x2, y2) {
                 y = ymax;
             }
 
-            // ABAJO
+            // Abajo
             else if (codeOut & BOTTOM) {
 
                 x = x1 + (x2 - x1) *
@@ -186,7 +185,7 @@ function cohenSutherland(x1, y1, x2, y2) {
                 y = ymin;
             }
 
-            // DERECHA
+            // Derecha
             else if (codeOut & RIGHT) {
 
                 y = y1 + (y2 - y1) *
@@ -196,7 +195,7 @@ function cohenSutherland(x1, y1, x2, y2) {
                 x = xmax;
             }
 
-            // IZQUIERDA
+            // Izquierda
             else if (codeOut & LEFT) {
 
                 y = y1 + (y2 - y1) *
@@ -206,7 +205,7 @@ function cohenSutherland(x1, y1, x2, y2) {
                 x = xmin;
             }
 
-            // Reemplazar punto externo
+            // Reemplazar punto
             if (codeOut === code1) {
 
                 x1 = x;
@@ -243,76 +242,148 @@ function cohenSutherland(x1, y1, x2, y2) {
 
 
 // =========================================
-// LINEA DE PRUEBA
+// CASOS DE PRUEBA
 // =========================================
 
-let x1 = 50;
+const casos = [
 
-let y1 = 50;
+    // Caso dentro
+    {
+        x1: 150,
+        y1: 150,
 
-let x2 = 500;
+        x2: 350,
+        y2: 250
+    },
 
-let y2 = 350;
+    // Caso fuera
+    {
+        x1: 20,
+        y1: 400,
+
+        x2: 60,
+        y2: 450
+    },
+
+    // Cruza izquierda
+    {
+        x1: 20,
+        y1: 200,
+
+        x2: 300,
+        y2: 200
+    },
+
+    // Cruza arriba
+    {
+        x1: 200,
+        y1: 50,
+
+        x2: 250,
+        y2: 450
+    },
+
+    // Cruza ambos lados
+    {
+        x1: 50,
+        y1: 50,
+
+        x2: 500,
+        y2: 350
+    }
+];
 
 
 // =========================================
-// DIBUJAR LINEA ORIGINAL
+// INDICE DEL CASO ACTUAL
 // =========================================
 
-drawLine(
-
-    x1,
-    y1,
-
-    x2,
-    y2,
-
-    "gray"
-);
+let indiceActual = 0;
 
 
 // =========================================
-// DIBUJAR VIEWPORT
+// DIBUJAR ESCENA
 // =========================================
 
-drawWindow();
+function drawScene() {
 
+    // Limpiar canvas
+    ctx.clearRect(
 
-// =========================================
-// APLICAR ALGORITMO
-// =========================================
+        0,
+        0,
 
-let resultado = cohenSutherland(
+        canvas.width,
+        canvas.height
+    );
 
-    x1,
-    y1,
+    // Dibujar viewport
+    drawWindow();
 
-    x2,
-    y2
-);
+    // Obtener linea actual
+    let linea = casos[indiceActual];
 
-
-// =========================================
-// DIBUJAR LINEA RECORTADA
-// =========================================
-
-if (resultado.accept) {
-
+    // Dibujar linea original
     drawLine(
 
-        resultado.x1,
-        resultado.y1,
+        linea.x1,
+        linea.y1,
 
-        resultado.x2,
-        resultado.y2,
+        linea.x2,
+        linea.y2,
 
-        "red"
+        "gray"
     );
+
+    // Aplicar algoritmo
+    let resultado = cohenSutherland(
+
+        linea.x1,
+        linea.y1,
+
+        linea.x2,
+        linea.y2
+    );
+
+    // Dibujar linea recortada
+    if (resultado.accept) {
+
+        drawLine(
+
+            resultado.x1,
+            resultado.y1,
+
+            resultado.x2,
+            resultado.y2,
+
+            "red"
+        );
+    }
+
+    console.log(resultado);
 }
 
 
 // =========================================
-// MOSTRAR RESULTADOS
+// CAMBIAR DE CASO
 // =========================================
 
-console.log(resultado);
+function siguienteCaso() {
+
+    indiceActual++;
+
+    // Reiniciar indice
+    if (indiceActual >= casos.length) {
+
+        indiceActual = 0;
+    }
+
+    drawScene();
+}
+
+
+// =========================================
+// INICIAR ESCENA
+// =========================================
+
+drawScene();
