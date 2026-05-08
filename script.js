@@ -11,9 +11,6 @@ const ctx = canvas.getContext("2d");
 // CONSTANTES DE REGION
 // =========================================
 
-// Valores binarios utilizados
-// por el algoritmo de Cohen-Sutherland
-
 const INSIDE = 0;
 
 const LEFT = 1;
@@ -38,9 +35,6 @@ function convertirY(y) {
 // =========================================
 // FUNCION PARA DIBUJAR LINEAS
 // =========================================
-
-// Funcion utilizada para dibujar
-// lineas y viewport
 
 function drawLine(x1, y1, x2, y2, color = "black") {
 
@@ -67,7 +61,7 @@ function drawLine(x1, y1, x2, y2, color = "black") {
 
 
 // =========================================
-// DATOS DE LA VENTANA DE RECORTE
+// DATOS DEL VIEWPORT
 // =========================================
 
 let xmin = 100;
@@ -80,7 +74,7 @@ let ymax = 300;
 
 
 // =========================================
-// FUNCION PARA DIBUJAR EL VIEWPORT
+// DIBUJAR VENTANA
 // =========================================
 
 function drawWindow() {
@@ -136,15 +130,11 @@ function drawWindow() {
 
 
 // =========================================
-// FUNCION PARA CALCULAR CODIGOS
+// CALCULAR CODIGO DE REGION
 // =========================================
-
-// Esta funcion determina en que region
-// se encuentra un punto
 
 function computeCode(x, y) {
 
-    // Punto dentro
     let code = INSIDE;
 
     // Izquierda
@@ -176,6 +166,45 @@ function computeCode(x, y) {
 
 
 // =========================================
+// FUNCION PRINCIPAL DEL ALGORITMO
+// =========================================
+
+// Esta funcion solamente verifica
+// aceptacion y rechazo trivial
+
+function cohenSutherland(x1, y1, x2, y2) {
+
+    let code1 = computeCode(x1, y1);
+
+    let code2 = computeCode(x2, y2);
+
+    // ACEPTACION TRIVIAL
+    if ((code1 | code2) === 0) {
+
+        console.log("Linea completamente dentro");
+
+        return true;
+    }
+
+    // RECHAZO TRIVIAL
+    else if ((code1 & code2) !== 0) {
+
+        console.log("Linea completamente fuera");
+
+        return false;
+    }
+
+    // CASO PARCIAL
+    else {
+
+        console.log("Linea necesita recorte");
+
+        return null;
+    }
+}
+
+
+// =========================================
 // LINEA DE PRUEBA
 // =========================================
 
@@ -189,7 +218,7 @@ let y2 = 350;
 
 
 // =========================================
-// DIBUJAR LINEA
+// DIBUJAR LINEA ORIGINAL
 // =========================================
 
 drawLine(
@@ -205,25 +234,28 @@ drawLine(
 
 
 // =========================================
-// DIBUJAR VENTANA
+// DIBUJAR VIEWPORT
 // =========================================
 
 drawWindow();
 
 
 // =========================================
-// CALCULAR CODIGOS
+// PROBAR ALGORITMO
 // =========================================
 
-let code1 = computeCode(x1, y1);
+let resultado = cohenSutherland(
 
-let code2 = computeCode(x2, y2);
+    x1,
+    y1,
+
+    x2,
+    y2
+);
 
 
 // =========================================
-// MOSTRAR RESULTADOS
+// MOSTRAR RESULTADO
 // =========================================
 
-console.log("Codigo punto 1:", code1);
-
-console.log("Codigo punto 2:", code2);
+console.log("Resultado:", resultado);
