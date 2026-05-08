@@ -14,7 +14,7 @@ const ctx = canvas.getContext("2d");
 // =========================================
 
 // Convierte el eje Y del canvas
-// a un sistema cartesiano
+// a coordenadas cartesianas
 
 function convertirY(y) {
 
@@ -23,37 +23,13 @@ function convertirY(y) {
 
 
 // =========================================
-// FUNCION PARA DIBUJAR PUNTOS
-// =========================================
-
-// Esta funcion dibuja puntos
-// usando coordenadas cartesianas
-
-function drawPoint(x, y, color = "red") {
-
-    // Color del punto
-    ctx.fillStyle = color;
-
-    // Dibujar el punto
-    ctx.fillRect(
-
-        x,
-        convertirY(y),
-
-        8,
-        8
-    );
-}
-
-
-// =========================================
 // FUNCION PARA DIBUJAR LINEAS
 // =========================================
 
-// Esta funcion dibuja lineas
-// entre dos puntos
+// Esta es la unica funcion permitida
+// para dibujar lineas y viewport
 
-function drawLine(x1, y1, x2, y2, color = "blue") {
+function drawLine(x1, y1, x2, y2, color = "black") {
 
     // Color de la linea
     ctx.strokeStyle = color;
@@ -84,12 +60,75 @@ function drawLine(x1, y1, x2, y2, color = "blue") {
 
 
 // =========================================
-// DIBUJAR PUNTOS DE PRUEBA
+// DATOS DE LA VENTANA DE RECORTE
 // =========================================
 
-drawPoint(100, 100);
+let xmin = 100;
 
-drawPoint(300, 250);
+let ymin = 100;
+
+let xmax = 400;
+
+let ymax = 300;
+
+
+// =========================================
+// FUNCION PARA DIBUJAR EL VIEWPORT
+// =========================================
+
+// Esta funcion dibuja la ventana
+// de recorte usando drawLine()
+
+function drawWindow() {
+
+    // Linea superior
+    drawLine(
+
+        xmin,
+        ymax,
+
+        xmax,
+        ymax,
+
+        "blue"
+    );
+
+    // Linea inferior
+    drawLine(
+
+        xmin,
+        ymin,
+
+        xmax,
+        ymin,
+
+        "blue"
+    );
+
+    // Linea izquierda
+    drawLine(
+
+        xmin,
+        ymin,
+
+        xmin,
+        ymax,
+
+        "blue"
+    );
+
+    // Linea derecha
+    drawLine(
+
+        xmax,
+        ymin,
+
+        xmax,
+        ymax,
+
+        "blue"
+    );
+}
 
 
 // =========================================
@@ -98,16 +137,25 @@ drawPoint(300, 250);
 
 drawLine(
 
-    100,
-    100,
+    50,
+    50,
 
-    300,
-    250
+    500,
+    350,
+
+    "red"
 );
+
+
+// =========================================
+// DIBUJAR VENTANA
+// =========================================
+
+drawWindow();
 
 
 // =========================================
 // MENSAJE DE VERIFICACION
 // =========================================
 
-console.log("Funciones de dibujo funcionando");
+console.log("Viewport funcionando correctamente");
