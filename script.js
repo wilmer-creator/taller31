@@ -80,52 +80,16 @@ let ymax = 300;
 function drawWindow() {
 
     // Superior
-    drawLine(
-
-        xmin,
-        ymax,
-
-        xmax,
-        ymax,
-
-        "blue"
-    );
+    drawLine(xmin, ymax, xmax, ymax, "blue");
 
     // Inferior
-    drawLine(
-
-        xmin,
-        ymin,
-
-        xmax,
-        ymin,
-
-        "blue"
-    );
+    drawLine(xmin, ymin, xmax, ymin, "blue");
 
     // Izquierda
-    drawLine(
-
-        xmin,
-        ymin,
-
-        xmin,
-        ymax,
-
-        "blue"
-    );
+    drawLine(xmin, ymin, xmin, ymax, "blue");
 
     // Derecha
-    drawLine(
-
-        xmax,
-        ymin,
-
-        xmax,
-        ymax,
-
-        "blue"
-    );
+    drawLine(xmax, ymin, xmax, ymax, "blue");
 }
 
 
@@ -166,11 +130,8 @@ function computeCode(x, y) {
 
 
 // =========================================
-// FUNCION PRINCIPAL DEL ALGORITMO
+// ALGORITMO COHEN-SUTHERLAND
 // =========================================
-
-// Esta funcion solamente verifica
-// aceptacion y rechazo trivial
 
 function cohenSutherland(x1, y1, x2, y2) {
 
@@ -178,29 +139,106 @@ function cohenSutherland(x1, y1, x2, y2) {
 
     let code2 = computeCode(x2, y2);
 
-    // ACEPTACION TRIVIAL
-    if ((code1 | code2) === 0) {
+    let accept = false;
 
-        console.log("Linea completamente dentro");
+    while (true) {
 
-        return true;
+        // ACEPTACION TRIVIAL
+        if ((code1 | code2) === 0) {
+
+            accept = true;
+
+            break;
+        }
+
+        // RECHAZO TRIVIAL
+        else if ((code1 & code2) !== 0) {
+
+            break;
+        }
+
+        // CALCULAR INTERSECCIONES
+        else {
+
+            let x;
+            let y;
+
+            // Punto que esta fuera
+            let codeOut = code1 !== 0 ? code1 : code2;
+
+            // ARRIBA
+            if (codeOut & TOP) {
+
+                x = x1 + (x2 - x1) *
+
+                    (ymax - y1) / (y2 - y1);
+
+                y = ymax;
+            }
+
+            // ABAJO
+            else if (codeOut & BOTTOM) {
+
+                x = x1 + (x2 - x1) *
+
+                    (ymin - y1) / (y2 - y1);
+
+                y = ymin;
+            }
+
+            // DERECHA
+            else if (codeOut & RIGHT) {
+
+                y = y1 + (y2 - y1) *
+
+                    (xmax - x1) / (x2 - x1);
+
+                x = xmax;
+            }
+
+            // IZQUIERDA
+            else if (codeOut & LEFT) {
+
+                y = y1 + (y2 - y1) *
+
+                    (xmin - x1) / (x2 - x1);
+
+                x = xmin;
+            }
+
+            // Reemplazar punto externo
+            if (codeOut === code1) {
+
+                x1 = x;
+
+                y1 = y;
+
+                code1 = computeCode(x1, y1);
+            }
+
+            else {
+
+                x2 = x;
+
+                y2 = y;
+
+                code2 = computeCode(x2, y2);
+            }
+        }
     }
 
-    // RECHAZO TRIVIAL
-    else if ((code1 & code2) !== 0) {
+    return {
 
-        console.log("Linea completamente fuera");
+        accept,
 
-        return false;
-    }
+        x1,
 
-    // CASO PARCIAL
-    else {
+        y1,
 
-        console.log("Linea necesita recorte");
+        x2,
 
-        return null;
-    }
+        y2
+    };
 }
 
 
@@ -229,7 +267,7 @@ drawLine(
     x2,
     y2,
 
-    "red"
+    "gray"
 );
 
 
@@ -241,7 +279,7 @@ drawWindow();
 
 
 // =========================================
-// PROBAR ALGORITMO
+// APLICAR ALGORITMO
 // =========================================
 
 let resultado = cohenSutherland(
@@ -255,7 +293,26 @@ let resultado = cohenSutherland(
 
 
 // =========================================
-// MOSTRAR RESULTADO
+// DIBUJAR LINEA RECORTADA
 // =========================================
 
-console.log("Resultado:", resultado);
+if (resultado.accept) {
+
+    drawLine(
+
+        resultado.x1,
+        resultado.y1,
+
+        resultado.x2,
+        resultado.y2,
+
+        "red"
+    );
+}
+
+
+// =========================================
+// MOSTRAR RESULTADOS
+// =========================================
+
+console.log(resultado);
