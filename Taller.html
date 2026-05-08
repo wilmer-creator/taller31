@@ -25,6 +25,13 @@
             color: #1e3a5f;
         }
 
+        .contenedor {
+
+            display: flex;
+
+            gap: 20px;
+        }
+
         canvas {
 
             background-color: white;
@@ -32,7 +39,20 @@
             border: 2px solid black;
         }
 
+        .panel {
+
+            width: 220px;
+
+            background-color: white;
+
+            padding: 15px;
+
+            border-radius: 10px;
+        }
+
         button {
+
+            width: 100%;
 
             margin-top: 10px;
 
@@ -50,17 +70,27 @@
     <!-- Titulo principal -->
     <h1>TALLER 3-1</h1>
 
-    <!-- Canvas principal -->
-    <canvas id="canvas" width="700" height="500"></canvas>
+    <div class="contenedor">
 
-    <br>
+        <!-- Canvas -->
+        <canvas id="canvas" width="700" height="500"></canvas>
 
-    <!-- Boton para cambiar casos -->
-    <button onclick="siguienteCaso()">
+        <!-- Panel lateral -->
+        <div class="panel">
 
-        Siguiente caso
+            <h3>Informacion</h3>
 
-    </button>
+            <div id="info"></div>
+
+            <button onclick="siguienteCaso()">
+
+                Siguiente caso
+
+            </button>
+
+        </div>
+
+    </div>
 
     <!-- Archivo JavaScript -->
     <script src="script.js"></script>

@@ -143,7 +143,7 @@ function cohenSutherland(x1, y1, x2, y2) {
 
     while (true) {
 
-        // ACEPTACION
+        // Aceptacion
         if ((code1 | code2) === 0) {
 
             accept = true;
@@ -151,13 +151,13 @@ function cohenSutherland(x1, y1, x2, y2) {
             break;
         }
 
-        // RECHAZO
+        // Rechazo
         else if ((code1 & code2) !== 0) {
 
             break;
         }
 
-        // RECORTE
+        // Recorte
         else {
 
             let x;
@@ -231,11 +231,9 @@ function cohenSutherland(x1, y1, x2, y2) {
         accept,
 
         x1,
-
         y1,
 
         x2,
-
         y2
     };
 }
@@ -247,7 +245,7 @@ function cohenSutherland(x1, y1, x2, y2) {
 
 const casos = [
 
-    // Caso dentro
+    // Dentro
     {
         x1: 150,
         y1: 150,
@@ -256,7 +254,7 @@ const casos = [
         y2: 250
     },
 
-    // Caso fuera
+    // Fuera
     {
         x1: 20,
         y1: 400,
@@ -283,7 +281,7 @@ const casos = [
         y2: 450
     },
 
-    // Cruza ambos lados
+    // Cruza varios lados
     {
         x1: 50,
         y1: 50,
@@ -295,10 +293,60 @@ const casos = [
 
 
 // =========================================
-// INDICE DEL CASO ACTUAL
+// INDICE ACTUAL
 // =========================================
 
 let indiceActual = 0;
+
+
+// =========================================
+// MOSTRAR INFORMACION
+// =========================================
+
+function mostrarInfo(linea, resultado) {
+
+    const info = document.getElementById("info");
+
+    info.innerHTML = `
+
+        <p>
+            <strong>Linea Original</strong>
+        </p>
+
+        <p>
+            P1:
+            (${linea.x1}, ${linea.y1})
+        </p>
+
+        <p>
+            P2:
+            (${linea.x2}, ${linea.y2})
+        </p>
+
+        <hr>
+
+        <p>
+            <strong>Resultado</strong>
+        </p>
+
+        <p>
+            Visible:
+            ${resultado.accept}
+        </p>
+
+        <p>
+            P1:
+            (${resultado.x1.toFixed(2)},
+            ${resultado.y1.toFixed(2)})
+        </p>
+
+        <p>
+            P2:
+            (${resultado.x2.toFixed(2)},
+            ${resultado.y2.toFixed(2)})
+        </p>
+    `;
+}
 
 
 // =========================================
@@ -360,19 +408,20 @@ function drawScene() {
         );
     }
 
-    console.log(resultado);
+    // Mostrar informacion
+    mostrarInfo(linea, resultado);
 }
 
 
 // =========================================
-// CAMBIAR DE CASO
+// SIGUIENTE CASO
 // =========================================
 
 function siguienteCaso() {
 
     indiceActual++;
 
-    // Reiniciar indice
+    // Reiniciar
     if (indiceActual >= casos.length) {
 
         indiceActual = 0;
