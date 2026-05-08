@@ -23,6 +23,79 @@ const TOP = 8;
 
 
 // =========================================
+// DATOS DEL VIEWPORT
+// =========================================
+
+let xmin = 100;
+
+let ymin = 100;
+
+let xmax = 400;
+
+let ymax = 300;
+
+
+// =========================================
+// CASOS DE PRUEBA
+// =========================================
+
+const casos = [
+
+    // Dentro
+    {
+        x1: 150,
+        y1: 150,
+
+        x2: 350,
+        y2: 250
+    },
+
+    // Fuera
+    {
+        x1: 20,
+        y1: 400,
+
+        x2: 60,
+        y2: 450
+    },
+
+    // Cruza izquierda
+    {
+        x1: 20,
+        y1: 200,
+
+        x2: 300,
+        y2: 200
+    },
+
+    // Cruza arriba
+    {
+        x1: 200,
+        y1: 50,
+
+        x2: 250,
+        y2: 450
+    },
+
+    // Cruza varios lados
+    {
+        x1: 50,
+        y1: 50,
+
+        x2: 500,
+        y2: 350
+    }
+];
+
+
+// =========================================
+// INDICE ACTUAL
+// =========================================
+
+let indiceActual = 0;
+
+
+// =========================================
 // FUNCION PARA CONVERTIR COORDENADAS
 // =========================================
 
@@ -35,6 +108,10 @@ function convertirY(y) {
 // =========================================
 // FUNCION PARA DIBUJAR LINEAS
 // =========================================
+
+// Funcion utilizada para:
+// - dibujar lineas
+// - dibujar viewport
 
 function drawLine(x1, y1, x2, y2, color = "black") {
 
@@ -61,35 +138,58 @@ function drawLine(x1, y1, x2, y2, color = "black") {
 
 
 // =========================================
-// DATOS DEL VIEWPORT
-// =========================================
-
-let xmin = 100;
-
-let ymin = 100;
-
-let xmax = 400;
-
-let ymax = 300;
-
-
-// =========================================
-// FUNCION PARA DIBUJAR VENTANA
+// FUNCION PARA DIBUJAR VIEWPORT
 // =========================================
 
 function drawWindow() {
 
     // Superior
-    drawLine(xmin, ymax, xmax, ymax, "blue");
+    drawLine(
+
+        xmin,
+        ymax,
+
+        xmax,
+        ymax,
+
+        "blue"
+    );
 
     // Inferior
-    drawLine(xmin, ymin, xmax, ymin, "blue");
+    drawLine(
+
+        xmin,
+        ymin,
+
+        xmax,
+        ymin,
+
+        "blue"
+    );
 
     // Izquierda
-    drawLine(xmin, ymin, xmin, ymax, "blue");
+    drawLine(
+
+        xmin,
+        ymin,
+
+        xmin,
+        ymax,
+
+        "blue"
+    );
 
     // Derecha
-    drawLine(xmax, ymin, xmax, ymax, "blue");
+    drawLine(
+
+        xmax,
+        ymin,
+
+        xmax,
+        ymax,
+
+        "blue"
+    );
 }
 
 
@@ -143,7 +243,7 @@ function cohenSutherland(x1, y1, x2, y2) {
 
     while (true) {
 
-        // Aceptacion
+        // Aceptacion trivial
         if ((code1 | code2) === 0) {
 
             accept = true;
@@ -151,7 +251,7 @@ function cohenSutherland(x1, y1, x2, y2) {
             break;
         }
 
-        // Rechazo
+        // Rechazo trivial
         else if ((code1 & code2) !== 0) {
 
             break;
@@ -237,66 +337,6 @@ function cohenSutherland(x1, y1, x2, y2) {
         y2
     };
 }
-
-
-// =========================================
-// CASOS DE PRUEBA
-// =========================================
-
-const casos = [
-
-    // Dentro
-    {
-        x1: 150,
-        y1: 150,
-
-        x2: 350,
-        y2: 250
-    },
-
-    // Fuera
-    {
-        x1: 20,
-        y1: 400,
-
-        x2: 60,
-        y2: 450
-    },
-
-    // Cruza izquierda
-    {
-        x1: 20,
-        y1: 200,
-
-        x2: 300,
-        y2: 200
-    },
-
-    // Cruza arriba
-    {
-        x1: 200,
-        y1: 50,
-
-        x2: 250,
-        y2: 450
-    },
-
-    // Cruza varios lados
-    {
-        x1: 50,
-        y1: 50,
-
-        x2: 500,
-        y2: 350
-    }
-];
-
-
-// =========================================
-// INDICE ACTUAL
-// =========================================
-
-let indiceActual = 0;
 
 
 // =========================================
@@ -421,11 +461,59 @@ function siguienteCaso() {
 
     indiceActual++;
 
-    // Reiniciar
+    // Reiniciar indice
     if (indiceActual >= casos.length) {
 
         indiceActual = 0;
     }
+
+    drawScene();
+}
+
+
+// =========================================
+// CASO ANTERIOR
+// =========================================
+
+function anteriorCaso() {
+
+    indiceActual--;
+
+    // Reiniciar indice
+    if (indiceActual < 0) {
+
+        indiceActual = casos.length - 1;
+    }
+
+    drawScene();
+}
+
+
+// =========================================
+// ACTUALIZAR VIEWPORT
+// =========================================
+
+function actualizarVentana() {
+
+    xmin = parseInt(
+
+        document.getElementById("xmin").value
+    );
+
+    ymin = parseInt(
+
+        document.getElementById("ymin").value
+    );
+
+    xmax = parseInt(
+
+        document.getElementById("xmax").value
+    );
+
+    ymax = parseInt(
+
+        document.getElementById("ymax").value
+    );
 
     drawScene();
 }
